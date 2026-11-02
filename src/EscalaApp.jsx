@@ -159,4 +159,165 @@ const EscalaApp = () => {
                     if (e.target.value.trim()) setNameError(false);
                   }}
                   placeholder="Ex: João Silva"
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white dark:bg-slate-900 dark:text-
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white dark:bg-slate-900 dark:text-white ${
+                    nameError 
+                      ? 'border-red-500 ring-2 ring-red-500' 
+                      : 'border-slate-300 dark:border-slate-600'
+                  }`}
+                  style={{ '--tw-ring-color': nameError ? '#ef4444' : '#03cafc' }}
+                />
+                {nameError && <p className="text-xs text-red-500">O preenchimento do nome é obrigatório.</p>}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Letra</label>
+                  <select
+                    value={letter}
+                    onChange={(e) => setLetter(e.target.value)}
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-900 dark:text-white"
+                    style={{ '--tw-ring-color': '#03cafc' }}
+                  >
+                    {['A', 'B', 'C', 'D', 'E'].map(l => <option key={l} value={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Meses</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="12"
+                    value={months}
+                    onChange={(e) => setMonths(e.target.value)}
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-900 dark:text-white"
+                    style={{ '--tw-ring-color': '#03cafc' }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Data de Início</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-900 dark:text-white"
+                  style={{ '--tw-ring-color': '#03cafc' }}
+                />
+              </div>
+
+              <button
+                onClick={handleGenerate}
+                className="w-full text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:brightness-110 transition-all shadow-md"
+                style={{ backgroundColor: '#03cafc' }}
+              >
+                <RefreshCw size={18} />
+                Gerar Escala
+              </button>
+            </div>
+
+            <div className="md:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 min-h-[500px] flex flex-col">
+              
+              {!scheduleData ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 space-y-4">
+                  <RefreshCw size={48} className="opacity-20" />
+                  <div className="text-center">
+                    <p className="font-medium text-slate-600 dark:text-slate-300">A sua escala gerada aparecerá aqui.</p>
+                    <p className="text-sm">Preencha os dados e clique em "Gerar Escala".</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
+                    <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-lg">
+                      <button
+                        onClick={() => setView('table')}
+                        className={`px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors ${
+                          view === 'table' ? 'text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                        }`}
+                        style={view === 'table' ? { backgroundColor: '#03cafc' } : {}}
+                      >
+                        <Table size={16} /> Tabela
+                      </button>
+                      <button
+                        onClick={() => setView('calendar')}
+                        className={`px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors ${
+                          view === 'calendar' ? 'text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                        }`}
+                        style={view === 'calendar' ? { backgroundColor: '#03cafc' } : {}}
+                      >
+                        <Calendar size={16} /> Calendário
+                      </button>
+                    </div>
+                    
+                    <button
+                      onClick={exportToExcel}
+                      className="px-4 py-2 text-white rounded-lg flex items-center gap-2 text-sm font-medium hover:brightness-110 transition-all shadow-sm"
+                      style={{ backgroundColor: '#03cafc' }}
+                    >
+                      <Download size={16} /> Exportar Excel
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    {view === 'table' ? (
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 text-sm">
+                            <th className="p-3 border-b dark:border-slate-700">Data</th>
+                            <th className="p-3 border-b dark:border-slate-700">Dia</th>
+                            <th className="p-3 border-b dark:border-slate-700 text-center">Turno</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-sm">
+                          {scheduleData.map((item, idx) => (
+                            <tr key={idx} className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                              <td className="p-3">{item.date.toLocaleDateString('pt-PT')}</td>
+                              <td className="p-3 uppercase">{item.date.toLocaleDateString('pt-PT', { weekday: 'short' })}</td>
+                              <td className="p-3 text-center">
+                                <span className={`inline-block px-3 py-1 rounded-full font-bold ${
+                                  item.shift === 'F' ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                                }`}>
+                                  {item.shift}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <div className="grid grid-cols-7 gap-2">
+                        {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(d => (
+                          <div key={d} className="text-center font-bold text-sm text-slate-500 dark:text-slate-400 py-2">
+                            {d}
+                          </div>
+                        ))}
+                        
+                        {Array.from({ length: scheduleData[0].date.getDay() === 0 ? 6 : scheduleData[0].date.getDay() - 1 }).map((_, i) => (
+                          <div key={`empty-${i}`} className="p-2"></div>
+                        ))}
+
+                        {scheduleData.map((item, idx) => (
+                          <div key={idx} className="border dark:border-slate-700 p-2 rounded-lg text-center flex flex-col items-center gap-1 bg-slate-50 dark:bg-slate-900/50">
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{item.date.getDate()}</span>
+                            <span className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold ${
+                              item.shift === 'F' ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                            }`}>
+                              {item.shift}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EscalaApp;
