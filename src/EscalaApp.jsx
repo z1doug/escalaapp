@@ -113,7 +113,6 @@ const EscalaApp = () => {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-8 transition-colors duration-300 font-sans">
         <div className="max-w-5xl mx-auto space-y-8">
           
-          {/* Cabeçalho */}
           <div className="flex items-center justify-between bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg" style={{ backgroundColor: '#03cafc' }}>
@@ -134,7 +133,6 @@ const EscalaApp = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Formulário lateral */}
             <div className="md:col-span-1 space-y-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
               
               <div className="space-y-2">
@@ -150,4 +148,15 @@ const EscalaApp = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  Nome do Colaborador *
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (e.target.value.trim()) setNameError(false);
+                  }}
+                  placeholder="Ex: João Silva"
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white dark:bg-slate-900 dark:text-
