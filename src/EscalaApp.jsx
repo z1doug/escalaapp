@@ -12,7 +12,6 @@ const EscalaApp = () => {
   const [scheduleData, setScheduleData] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Preenche a data inicial com a data de hoje por defeito
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     setStartDate(today);
@@ -30,7 +29,6 @@ const EscalaApp = () => {
     const seqArray = sequence.split(',').map(s => s.trim().toUpperCase());
     const start = new Date(startDate);
     
-    // Lógica para ir até ao ÚLTIMO dia do último mês selecionado
     const end = new Date(start.getFullYear(), start.getMonth() + Number(months), 0); 
     
     const data = [];
@@ -114,3 +112,42 @@ const EscalaApp = () => {
     <div className={darkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-8 transition-colors duration-300 font-sans">
         <div className="max-w-5xl mx-auto space-y-8">
+          
+          {/* Cabeçalho */}
+          <div className="flex items-center justify-between bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg" style={{ backgroundColor: '#03cafc' }}>
+                <Calendar className="text-white" size={24} />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Gerador de Escalas</h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Organize turnos e exporte escalas num instante.</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setDarkMode(!darkMode)} 
+              className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-600"
+              title="Alternar Modo Escuro"
+            >
+              {darkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-slate-600" />}
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Formulário lateral */}
+            <div className="md:col-span-1 space-y-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+              
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sequência (ex: M,T,N,F,F)</label>
+                <input
+                  type="text"
+                  value={sequence}
+                  onChange={(e) => setSequence(e.target.value)}
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white dark:bg-slate-900 dark:text-white"
+                  style={{ '--tw-ring-color': '#03cafc' }}
+                />
+                <p className="text-xs text-slate-500 dark:text-slate-400">M: 08-16H | T: 16-24H | N: 00-08H | F: Folga</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking
